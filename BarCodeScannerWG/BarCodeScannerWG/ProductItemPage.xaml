@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:BarCodeScannerWG"
              xmlns:gv="clr-namespace:BarcodeScanner.Mobile.XamarinForms;assembly=BarcodeScanner.Mobile.XamarinForms"
              x:Class="BarCodeScannerWG.ProductItemPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary" 
+                     Priority="0" 
+                     Text="Excel Export"
+                     Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid x:Name="mainGrid" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" RowSpacing="0">
             <Grid.RowDefinitions>

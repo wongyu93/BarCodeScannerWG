@@ -1,6 +1,5 @@
 ﻿using BarCodeScannerWG.Models;
 using Newtonsoft.Json;
-using Rg.Plugins.Popup.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +11,11 @@ using System.IO;
 using Xamarin.Essentials;
 using BarcodeScanner.Mobile.Core;
 using System.Threading.Tasks;
+using Plugin.SimpleAudioPlayer;
+using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
+using BarCodeScannerWG.Helps;
 
 namespace BarCodeScannerWG
 {
@@ -23,7 +27,10 @@ namespace BarCodeScannerWG
         private ObservableCollection<MainListItem> allList;
         private int productsIndex;
 
-        private static readonly IsimpleAudo
+        private static readonly ISimpleAudioPlayer _player = CrossSimpleAudioPlayer.CreateSimpleAudioPlayer();
+
+        INavigation Navigation => Application.Current.MainPage.Navigation;
+
         public ProductItemPage(ObservableCollection<MainListItem> _allList, int _index)
         {
             InitializeComponent();
@@ -197,7 +204,7 @@ namespace BarCodeScannerWG
             if (selectedItemIndex > -1)
             {
                 IsEnabled = false;
-                await Navigation.PushPopupAsync(new EditModalPage(allList, productsIndex, selectedItemIndex), true);
+                //await this.Navigation.ShowPopupAsync();
                 IsEnabled = true;
             }
         }
@@ -224,7 +231,7 @@ namespace BarCodeScannerWG
                 if (allList[productsIndex].ProductsList.Count > 0)
                     allProductsSourceMaxID = allList[productsIndex].ProductsList.Max(x => x.ID);
 
-                allList[productsIndex].ProductsList.Add(new ProductListItem(allProductsSourceMaxID + 1, ((Entry)sender).Text, "", null));
+                allList[productsIndex].ProductsList.Add(new ProductListItem(allProductsSourceMaxID + 1, ((Entry)sender).Text, "", null, DateTime.Now));
 
                 ((Entry)sender).Text = "";
 
@@ -264,15 +271,55 @@ namespace BarCodeScannerWG
                 if (allList[productsIndex].ProductsList.Count > 0)
                     allProductsSourceMaxID = allList[productsIndex].ProductsList.Max(x => x.ID);
 
-                allList[productsIndex].ProductsList.Add(new ProductListItem(allProductsSourceMaxID + 1, result[0].DisplayValue, "", null));
+                allList[productsIndex].ProductsList.Add(new ProductListItem(allProductsSourceMaxID + 1, result[0].DisplayValue, "", null, DateTime.Now));
 
                 Application.Current.Properties[App.Current.Resources["AllListsSource"].ToString()] = JsonConvert.SerializeObject(allList);
                 await Application.Current.SavePropertiesAsync();
             }
 
+            try
+            {
+                string strsound = "beep07.wav";
+                var assembly = typeof(App).GetTypeInfo().Assembly;
+                var stream = assembly.GetManifestResourceStream("BarCodeScannerWG.Sounds." + strsound);
+                _player.Load(stream);
+                _player.Play();
+                Thread.Sleep(500);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             await Task.Delay(1000);
             cameraview.IsScanning = true;
+        }
+
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
+        {
+            if (this.allList[productsIndex].ProductsList.Count == 0)
+            {
+                return;
+            }
+
+            var path = await ExportToShare.Instance.ToExcel(this.allList[productsIndex].ProductsList, this.allList[productsIndex].DisplayName, this.allList[productsIndex].ID);
+
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
+            {
+                try
+                {
+                    await Share.RequestAsync(new ShareFileRequest
+                    {
+                        Title = this.allList[productsIndex].DisplayName + " List",
+                        File = new ShareFile(path)
+                    });
+                }
+                catch (Exception ex)
+                {
+                    //Debug.WriteLine("ERROR: " + ex.Message);
+                    await Application.Current.MainPage.DisplayAlert("Err", ex.Message, "OK");
+                }
+            }
         }
     }
 }

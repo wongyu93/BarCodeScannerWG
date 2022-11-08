@@ -5,6 +5,15 @@
              x:Class="BarCodeScannerWG.MainPage"
              Title="전체 목록"
              NavigationPage.TitleIcon="logoCognexIcon">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="ToolbarNewList" 
+					 Order="Primary" 
+					 Priority="1" 
+					 IconImageSource="newlisticon"
+                     Clicked="ToolbarNewList_Clicked"/>
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -22,7 +31,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="listBulletIcon" VerticalOptions="CenterAndExpand" Margin="10" />
+                                <Image Source="barcodelist" VerticalOptions="CenterAndExpand" Margin="10" />
                                 <Label Grid.Column="1" Text="{Binding DisplayName}" FontSize="16" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" VerticalOptions="CenterAndExpand" />
                                 <StackLayout Grid.Column="2" VerticalOptions="CenterAndExpand" Padding="10">
                                     <Image Source="editIcon" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />

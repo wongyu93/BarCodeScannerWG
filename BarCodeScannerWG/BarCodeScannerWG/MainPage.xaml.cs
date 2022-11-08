@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Xamarin.Forms;
 using Newtonsoft.Json;
-using Rg.Plugins.Popup.Extensions;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace BarCodeScannerWG
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, INotifyPropertyChanged
     {
+
         private ObservableCollection<MainListItem> allListsSource;
 
         public MainPage()
@@ -63,9 +65,16 @@ namespace BarCodeScannerWG
             {
                 IsEnabled = false;
                 //await Navigation.PushPopupAsync(new EditModalPage(allListsSource, index, -1), true);
-                //string sTilte
-                //await DisplayPromptAsync("")
+                string sTilte = allListsSource[index].DisplayName;
+                string result = await DisplayPromptAsync(sTilte, "Edit Title");
+                Console.WriteLine(result);
+
+                allListsSource[index].DisplayName = result;
                 IsEnabled = true;
+                Application.Current.Properties[App.Current.Resources["AllListsSource"].ToString()] = JsonConvert.SerializeObject(allListsSource);
+                await Application.Current.SavePropertiesAsync();
+
+                Application.Current.MainPage = new NavigationPage(new MainPage());
             }
         }
 
@@ -80,6 +89,19 @@ namespace BarCodeScannerWG
                 await Navigation.PushAsync(new ProductItemPage(allListsSource, index), true);
                 IsEnabled = true;
             }
+        }
+        private async void ToolbarNewList_Clicked(object sender, EventArgs e)
+        {
+            string result = await DisplayPromptAsync("", "Add New List");
+
+            int allListsSourceMaxID = 0;
+            if (allListsSource.Count > 0)
+                allListsSourceMaxID = allListsSource.Max(x => x.ID);
+
+            allListsSource.Add(new MainListItem(allListsSourceMaxID + 1, result, new ObservableCollection<ProductListItem>()));
+
+            Application.Current.Properties[App.Current.Resources["AllListsSource"].ToString()] = JsonConvert.SerializeObject(allListsSource);
+            await Application.Current.SavePropertiesAsync();
         }
     }
 }
