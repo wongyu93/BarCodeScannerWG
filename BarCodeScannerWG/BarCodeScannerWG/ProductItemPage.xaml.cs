@@ -16,6 +16,8 @@ using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using BarCodeScannerWG.Helps;
+using Xamarin.CommunityToolkit.Extensions;
+using BarCodeScannerWG.Interfaces;
 
 namespace BarCodeScannerWG
 {
@@ -35,6 +37,8 @@ namespace BarCodeScannerWG
         {
             InitializeComponent();
 
+            BarcodePermission();
+
             allList = _allList;
             productsIndex = _index;
 
@@ -47,28 +51,42 @@ namespace BarCodeScannerWG
         {
             base.OnAppearing();
 
-            if (appearingFirstTime)
+            //if (appearingFirstTime)
+            //{
+            //    appearingFirstTime = false;
+
+            //    // Get cmbSDK version number
+            //    //scannerControl.SdkVersion();
+
+            //    //CreateScannerDevice();
+            //}
+            //else
+            //{
+            //    //----------------------------------------------------------------------------
+            //    // When an page is disappeared, the connection to the scanning device needs
+            //    // to be closed; thus when we are resumed (Appear this page again) we
+            //    // have to restore the connection (assuming we had one).
+            //    // This is used for android only.
+            //    // For iOS we use Observer that is created in ScannerControl class in iOS platform specific project
+            //    //----------------------------------------------------------------------------
+            //    if (Device.RuntimePlatform == Device.Android && await Permissions.CheckStatusAsync<Permissions.Camera>() == PermissionStatus.Granted)
+            //    {
+            //        //scannerControl.Connect();
+            //    }
+            //}
+        }
+        private async void BarcodePermission()
+        {
+            var cameraResult = await PermissionMethods.AskForRequiredCameraPermission();
+            if (cameraResult)
             {
-                appearingFirstTime = false;
 
-                // Get cmbSDK version number
-                //scannerControl.SdkVersion();
-
-                //CreateScannerDevice();
             }
             else
             {
-                //----------------------------------------------------------------------------
-                // When an page is disappeared, the connection to the scanning device needs
-                // to be closed; thus when we are resumed (Appear this page again) we
-                // have to restore the connection (assuming we had one).
-                // This is used for android only.
-                // For iOS we use Observer that is created in ScannerControl class in iOS platform specific project
-                //----------------------------------------------------------------------------
-                if (Device.RuntimePlatform == Device.Android && await Permissions.CheckStatusAsync<Permissions.Camera>() == PermissionStatus.Granted)
-                {
-                    //scannerControl.Connect();
-                }
+                //카메라 권한 설정화면으로 이동
+                IPermissionSettingsService service = DependencyService.Get<IPermissionSettingsService>();
+                service.OpenAppSettings();
             }
         }
 
@@ -204,7 +222,7 @@ namespace BarCodeScannerWG
             if (selectedItemIndex > -1)
             {
                 IsEnabled = false;
-                //await this.Navigation.ShowPopupAsync();
+                await this.Navigation.ShowPopupAsync(new EditModalPage(allList, productsIndex, selectedItemIndex));
                 IsEnabled = true;
             }
         }

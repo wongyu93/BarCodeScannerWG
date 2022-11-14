@@ -64,10 +64,10 @@
                                     <Label Text="{Binding DisplayType}" FontSize="15" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" />
                                 </StackLayout>
                                 <StackLayout Grid.Column="2" VerticalOptions="CenterAndExpand" Padding="10">
-                                    <Image Source="editIcon" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
+                                    <!--<Image Source="editIcon" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />
                                     <StackLayout.GestureRecognizers>
                                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="Edit_Tapped" CommandParameter="{Binding ID}" />
-                                    </StackLayout.GestureRecognizers>
+                                    </StackLayout.GestureRecognizers>-->
                                 </StackLayout>
                                 <StackLayout Grid.Column="3" VerticalOptions="CenterAndExpand" Padding="10">
                                     <Image Source="deleteIcon" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" />

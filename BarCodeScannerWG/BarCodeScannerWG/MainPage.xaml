@@ -53,7 +53,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Entry Grid.Row="1" x:Name="txtNewList" FontSize="18" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" HorizontalTextAlignment="Start" Placeholder="Add new list" Completed="txtNewList_Completed" />
+            <!--<Entry Grid.Row="1" x:Name="txtNewList" FontSize="18" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" HorizontalTextAlignment="Start" Placeholder="Add new list" Completed="txtNewList_Completed" />-->
         </Grid>
     </ContentPage.Content>
 </ContentPage>
