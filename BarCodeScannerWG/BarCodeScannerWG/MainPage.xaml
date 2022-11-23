@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:BarCodeScannerWG"
+             xmlns:admob="clr-namespace:BarCodeScannerWG.AdMob"
              x:Class="BarCodeScannerWG.MainPage"
              Title="전체 목록"
              NavigationPage.TitleIcon="logoCognexIcon">
@@ -18,7 +19,7 @@
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <ListView x:Name="lstAllLists" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HasUnevenRows="True" SelectionMode="None">
                 <ListView.ItemTemplate>
@@ -53,6 +54,10 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <admob:AdBanner x:Name="adBanner" 
+								Grid.Row="1"  Margin="0,0,0,0" 
+								Size="Standardbanner" 
+								BackgroundColor="Transparent"/>
             <!--<Entry Grid.Row="1" x:Name="txtNewList" FontSize="18" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" HorizontalTextAlignment="Start" Placeholder="Add new list" Completed="txtNewList_Completed" />-->
         </Grid>
     </ContentPage.Content>

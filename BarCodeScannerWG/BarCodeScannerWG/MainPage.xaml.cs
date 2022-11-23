@@ -95,13 +95,16 @@ namespace BarCodeScannerWG
             string result = await DisplayPromptAsync("", "Add New List");
 
             int allListsSourceMaxID = 0;
-            if (allListsSource.Count > 0)
-                allListsSourceMaxID = allListsSource.Max(x => x.ID);
+            if (result != null)
+            {
+                if (allListsSource.Count > 0)
+                    allListsSourceMaxID = allListsSource.Max(x => x.ID);
 
-            allListsSource.Add(new MainListItem(allListsSourceMaxID + 1, result, new ObservableCollection<ProductListItem>()));
+                allListsSource.Add(new MainListItem(allListsSourceMaxID + 1, result, new ObservableCollection<ProductListItem>()));
 
-            Application.Current.Properties[App.Current.Resources["AllListsSource"].ToString()] = JsonConvert.SerializeObject(allListsSource);
-            await Application.Current.SavePropertiesAsync();
+                Application.Current.Properties[App.Current.Resources["AllListsSource"].ToString()] = JsonConvert.SerializeObject(allListsSource);
+                await Application.Current.SavePropertiesAsync();
+            }
         }
     }
 }
